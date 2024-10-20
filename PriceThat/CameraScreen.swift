@@ -18,6 +18,7 @@ struct CameraScreen: View {
     @State private var pickerItem: PhotosPickerItem?
     @State private var selectedImage: Image?
     
+    
     @ObservedObject var dataModel: DataModel
     
     var body: some View {
