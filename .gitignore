@@ -1,0 +1,64 @@
+# Ignore Config.plist file
+Config.plist
+iOS Phones - 6.5
+iOS Phones - 5.5
+iOS Phones - 6.7
+Ebaylogo.png
+OfferUp_Logo.png
+
+# Xcode
+#
+build/
+DerivedData/
+*.xcworkspace
+!default.xcworkspace
+xcuserdata/
+*.moved-aside
+*.xcuserstate
+
+# Swift Package Manager
+#
+.build/
+Packages/
+Package.pins
+Package.resolved
+
+# SwiftPM rule to ignore macOS `.DS_Store` files
+.DS_Store
+
+# CocoaPods
+#
+Pods/
+Podfile.lock
+
+# Carthage
+#
+Carthage/Build/
+
+# Fastlane
+#
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# Other
+#
+*.pbxuser
+*.perspectivev3
+*.storyboardc
+xcshareddata/WorkspaceSettings.xcsettings
+*.xccheckout
+*.xcscmblueprint
+.idea/
+*.hmap
+*.ipa
+*.app.dSYM.zip
+*.app.dSYM
+
+# Temporary files
+#
+*.swp
+*~
+*.tmp
+*.temp
