@@ -3,6 +3,6 @@
 <plist version="1.0">
 <dict>
 	<key>AWSKey</key>
-	<string>https://arkhjipeog.execute-api.us-east-2.amazonaws.com/default/PriceThatLambdaFunction</string>
+	<string>Key</string>
 </dict>
 </plist>
