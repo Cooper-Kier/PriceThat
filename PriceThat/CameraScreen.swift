@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import PhotosUI
 
 struct CameraScreen: View {
     @State private var capturedImage: UIImage?
@@ -14,6 +15,8 @@ struct CameraScreen: View {
     @State private var didTapCapture: Bool? = false
     @State private var flash: Bool = false
     @State private var cameraDevice: Int = Camera.Rear.rawValue
+    @State private var pickerItem: PhotosPickerItem?
+    @State private var selectedImage: Image?
     
     @ObservedObject var dataModel: DataModel
     
@@ -32,24 +35,29 @@ struct CameraScreen: View {
                     HStack(alignment: .bottom){ //Top Stack
                         
                         Spacer()
+                        Image(systemName: flash ? "bolt.fill" : "bolt.slash.fill")
+                            .foregroundColor(Color("Color"))
+                            .font(.system(size: 18))
+                            .onTapGesture {
+                                flash.toggle()
+                            }
                         
                     }
                     .padding()
                     .padding(.top, 48)
                     .padding(.horizontal, 8)
-                    .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height*0.1)
-                    .background(Color.clear.opacity(0.70))
+                    .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height*0.12)
+                    .background(Color.black.opacity(0.70))
                     
                     Spacer()
                     
                     HStack{
                         ZStack(alignment: .center) {
                             
-                            Image(systemName: flash ? "bolt.fill" : "bolt.slash.fill")
+                            Image(systemName: "photo.stack")
                                 .foregroundColor(Color("Color"))
-                                .onTapGesture {
-                                    flash.toggle()
-                                }
+                                .font(.system(size: 18))
+                            PhotosPicker("   ", selection: $pickerItem, matching: .images)
                         }
                                 .frame(width: 60, height: 60)
                         
@@ -80,6 +88,7 @@ struct CameraScreen: View {
                                 
                                 Image(systemName: "arrow.triangle.2.circlepath.camera")
                                     .foregroundColor(Color("Color"))
+                                    .font(.system(size: 18))
                                 
                             }
                             .frame(width: 60, height: 60)
@@ -90,6 +99,21 @@ struct CameraScreen: View {
                     .background(Color.black.opacity(0.7))
                 }
             )
+        }
+        .onChange(of: pickerItem){
+            Task{
+                do {
+                    selectedImage = try await pickerItem?.loadTransferable(type: Image.self)
+                    dataModel.item = selectedImage?.render()
+                    print("Image converted to UIImage")
+                    
+                } catch {
+                    print ("Image to UIImage failed")
+                }
+                
+                dataModel.itemPhoto_64 = dataModel.item!.reduceImageSize()!.base64!
+                dataModel.showView = 3
+            }
         }
         .ignoresSafeArea()
         .navigationBarTitleDisplayMode(.inline)

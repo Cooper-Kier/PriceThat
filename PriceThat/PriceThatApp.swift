@@ -19,17 +19,21 @@ struct PriceThatApp: App {
                 
                 switch dataModel.showView {
                     
-                case 0 :
+                case 0 : //Camera Screen
                     
                     CameraScreen(dataModel: dataModel)
                 
-                case 1:
+                case 1: //Photo View With Condition Selection
                     
                     PhotoView(tempBrand: "-", tempCondition: "Good", isLoading: false)
                     
-                case 2:
+                case 2: //Final Price View
                     
                     PricedView(dataModel: dataModel)
+                
+                case 3: //Catagory Selection
+                    
+                    CatagoryView(dataModel: dataModel)
                     
                 default:
                     

@@ -17,168 +17,113 @@ struct PhotoView: View {
     @State var tempCondition: String
     @State var isLoading: Bool
     
-    let conditions = ["Brand New", "Great", "Good", "Poor", "Bad"]
+    @State private var sheet = true
+    @State private var settingsDetent = PresentationDetent.fraction(0.40)
+    
+    let conditions = ["Brand New", "Great", "Good", "Poor"]
     let brands = ["-"]
     
     var body: some View {
             
-            VStack {
-                
+        VStack {
+            if isLoading{
                 Image(uiImage: dataModel.item!)
                     .resizable()
                     .scaledToFill()
                     .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
                     .overlay(
-                        
-                        ZStack{
-                            
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: Color("Color")))
+                            .scaleEffect(3.5)
+                            .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+                            .background(.ultraThinMaterial)
+                            .ignoresSafeArea()
+                    )
+            } else {
+                Image(uiImage: dataModel.item!)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+                    .sheet(isPresented: $sheet){
+                        VStack{
+                            Spacer()
                             VStack{
-                                
-                                Spacer()
-                                
-                                VStack{
-                                    
-                                    VStack{
-                                        
-                                        VStack{
-                                            
-                                            HStack(){
-                                                
-                                                Spacer()
-                                                Button{ //Top Left 'X' button
-                                                    
-                                                    dataModel.showView = 0
-                                                    
-                                                } label: {
-                                                    
-                                                    HStack{
-                                                        
-                                                        Text("Retake Photo")
-                                                            .bold()
-                                                            .foregroundColor(.white)
-                                                            .font(.callout)
-                                                        
-                                                        Image(systemName: "camera")
-                                                            .foregroundColor(.white)
-                                                        
-                                                    }
-                                                    .background(Color.clear)
-                                                    .cornerRadius(10)
-                                                    
-                                                }
-                                                .padding()
-                                                
-                                            }
-                                            .background(Color.clear)
-                                            HStack{
-                                                
-                                                Spacer()
-                                                Text("Condition")
-                                                    .font(.title2)
-                                                    .bold()
-                                                    .foregroundColor(.white)
-                                                Spacer()
-                                                
-                                                
-                                            }
-                                        }
-                                        
-                                        Picker ("Select Condition", selection: $tempCondition) {
-                                            
-                                            ForEach(conditions, id: \.self){
-                                                Text($0)
-                                                
-                                            }
-                                        }
-                                        .pickerStyle(.segmented)
-                                        .background(Color.clear)
-                                        .border(Color.white, width: 3)
-                                        .cornerRadius(7)
-                                        
-                                        
-                                    }
-                                    .background(Color.clear)
-                                    .padding(.horizontal, 10)
-                                    
-                                    
-                                    HStack{
-                                        
-                                        Button{
-                                            
-                                            isLoading = true
-                                            
-                                            dataModel.condition = tempCondition
-                                            dataModel.brand = tempBrand
-                                            
-                                            dataModel.callPriceAPI()
-                                            
-                                            
-                                        } label: {
-                                            
-                                            ZStack{
-                                                
-                                                RoundedRectangle(cornerSize: CGSize(width: UIScreen.main.bounds.width-30, height: 50))
-                                                    .foregroundColor(Color.white)
-                                                    .background(Color.clear)
-                                                
-                                                ZStack{
-                                                    
-                                                    HStack{
-                                                        
-                                                        Spacer()
-                                                        
-                                                        Text("Price")
-                                                            .font(.largeTitle)
-                                                            .foregroundColor(Color("Color"))
-                                                        
-                                                        Spacer()
-                                                        
-                                                        
-                                                    }
-                                                    .frame(width: UIScreen.main.bounds.width-30, height: 50)
-                                                    HStack {
-                                                        Spacer()
-                                                        Image(systemName: "arrowshape.right.fill")
-                                                            .foregroundColor(Color("Color"))
-                                                            .imageScale(.large)
-                                                    }
-                                                    .frame(width: UIScreen.main.bounds.width-110, height: 50)
-                                                }
-                                            }
+                                HStack(){
+                                    Spacer()
+                                    Button{ //Retake Photo Button
+                                        dataModel.showView = 0
+                                    } label: {
+                                        HStack{
+                                            Text("Retake Photo")
+                                                .bold()
+                                                .foregroundColor(Color("Color"))
+                                                .font(.callout)
+                                            Image(systemName: "camera")
+                                                .foregroundColor(Color("Color"))
                                         }
                                         .padding()
-                                        
+                                    }
+                                }
+                                HStack{ //Title
+                                    Spacer()
+                                    Text("Condition")
+                                        .font(.title2)
+                                        .bold()
+                                        .foregroundColor(Color("Color"))
+                                    Spacer()
+                                }
+                                Picker ("Select Condition", selection: $tempCondition) { //Condition Selector
+                                    
+                                    ForEach(conditions, id: \.self){
+                                        Text($0)
+                                            .foregroundColor(Color("Color"))
                                         
                                     }
-                                    .padding(.bottom, 20)
-                                    .background(Color.clear)
-                                    .frame(alignment: .top)
                                 }
-                                .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height*0.3)
-                                .background(Color.black.opacity(0.7))
-                                
-                            }
-                            .background(Color.clear)
-                            .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-                            
-                            if isLoading{
-                                
-                                VStack{
-                                    ProgressView()
-                                        .progressViewStyle(CircularProgressViewStyle(tint: Color("Color")))
-                                        .scaleEffect(3.5)
+                                .pickerStyle(.wheel)
+                                .frame(height: UIScreen.main.bounds.height*0.14)
+                                HStack{
+                                    Button{
+                                        isLoading = true
+                                        dataModel.condition = tempCondition
+                                        dataModel.brand = tempBrand
+                                        dataModel.callPriceAPI()
+                                    } label: {
+                                        ZStack{
+                                            RoundedRectangle(cornerRadius: 20)
+                                                .stroke(Color("Color"), lineWidth: 2)
+                                                .frame(width: UIScreen.main.bounds.width-40, height: UIScreen.main.bounds.height*0.085)
+                                            HStack{
+                                                Spacer()
+                                                Text("Price")
+                                                    .foregroundColor(Color("Color"))
+                                                    .font(.title)
+                                                    .padding()
+                                                Spacer()
+                                            }
+                                            .frame(width: UIScreen.main.bounds.width-40, height: UIScreen.main.bounds.height*0.085)
+                                            HStack{
+                                                Spacer()
+                                                Image(systemName: "arrowshape.right")
+                                                    .foregroundColor(Color("Color"))
+                                                    .font(.system(size: 35))
+                                                    .padding(.trailing, 30)
+                                            }
+                                            .frame(width: UIScreen.main.bounds.width-40, height: UIScreen.main.bounds.height*0.085)
+                                        }
+                                        .padding(.bottom, 12)
+                                    }
                                 }
-                                .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-                                .background(.ultraThinMaterial)
-                                
-                            }
-                        })
-                
-            }
+                            } //End of lower VStack
+                            .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height * 0.40)
+                            .background(Color.white)
+                        }
+                        .interactiveDismissDisabled()
+                        .presentationDetents([.fraction(0.40), .fraction(0.13)], selection: $settingsDetent)
+                    } //End of sheet
+            } //End of else
+        } //End of Largest VStack
             .ignoresSafeArea()
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden()
             .environmentObject(dataModel)
-        
     }
 }

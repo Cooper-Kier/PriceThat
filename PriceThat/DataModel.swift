@@ -12,6 +12,8 @@ struct JSONParse: Codable{
     
     var price: String = "-"
     var title: String = "Item Not Found"
+    var ebay: String = "https://ebay.com"
+    var offerup: String = "https://offerup.com"
 }
 
 class DataModel: ObservableObject {
@@ -21,15 +23,25 @@ class DataModel: ObservableObject {
     @Published var showView = 0
     @Published var brand: String = " "
     @Published var condition: String = "Used"
+    @Published var catagory: String = "Other"
     @Published var price: String = "-"
     @Published var title: String = "Item Not Found"
+    @Published var ebayLink: String = "https://www.ebay.com"
+    @Published var offerUpLink: String = "https://www.offerup.com"
     
     func callPriceAPI() {
         
+        var keys: String? = ""
+        if let path = Bundle.main.path(forResource: "Keys", ofType: "plist") {
+            keys = NSDictionary(contentsOfFile: path)?.description
+            }
+        
         var APIItemPrice: String = "-"
         var APIItemTitle: String = "Item Not Found"
+        var APIEbayLink: String = "https://ebay.com"
+        var APIOfferUpLink: String = "https://offerup.com"
         
-        guard let url = URL(string: "https://arkhjipeog.execute-api.us-east-2.amazonaws.com/default/PriceThatLambdaFunction") else {
+        guard let url = URL(string: keys!) else {
             return
         }
         
@@ -45,7 +57,8 @@ class DataModel: ObservableObject {
         let body: [String: String] = [
             "itemPhoto": itemPhoto_64,
             "itemBrand": brand,
-            "itemCondition": condition
+            "itemCondition": condition,
+            "catagory": catagory
         ]
         request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
         
@@ -61,9 +74,14 @@ class DataModel: ObservableObject {
                 
                 APIItemPrice = APIResponse.price
                 APIItemTitle = APIResponse.title
+                APIEbayLink = APIResponse.ebay
+                APIOfferUpLink = APIResponse.offerup
+                
                 
                 print ("Title: \(APIItemTitle)")
                 print ("Price: \(APIItemPrice)")
+                print ("Ebay: \(APIEbayLink)")
+                print ("OfferUp: \(APIOfferUpLink)")
             }
             catch {
                 print("API Response Error")
@@ -73,6 +91,8 @@ class DataModel: ObservableObject {
                 
                 self.price = APIItemPrice
                 self.title = APIItemTitle
+                self.ebayLink = APIEbayLink
+                self.offerUpLink = APIOfferUpLink
                 self.showView = 2
             }
         }
