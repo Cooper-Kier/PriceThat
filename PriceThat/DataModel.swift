@@ -41,6 +41,8 @@ class DataModel: ObservableObject {
         var APIEbayLink: String = "https://ebay.com"
         var APIOfferUpLink: String = "https://offerup.com"
         
+        
+        
         guard let url = URL(string: keys!) else {
             return
         }
