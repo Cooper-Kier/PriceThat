@@ -9,3 +9,6 @@ of items around your home, PriceThat makes it easy to become a savvy consumer.
 - **Python** - Utilized for image analysis and recognition.
 - **AWS API Gatway** - For fetching real-time pricing information.
 - **ChatGPT API** -For image recognition.
+
+## Demo
+https://apps.apple.com/us/app/pricethat/id6523336595
